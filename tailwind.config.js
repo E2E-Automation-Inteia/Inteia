@@ -4,7 +4,11 @@ export default {
     "./src/**/*.{html,ts}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        exo: ['Exo', 'sans-serif'],
+      },
+    },
   },
   // @ts-ignore
   plugins: [require('daisyui')],

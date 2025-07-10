@@ -3,3 +3,32 @@
 @tailwind components;
 @tailwind utilities;
 @plugin "daisyui";
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+body.dark {
+    --mat-primary: #9c27b0;
+    /* morado */
+    --mat-accent: #4caf50;
+    /* verde */
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+.light-mode {
+    background-color: white;
+    color: black;
+}
