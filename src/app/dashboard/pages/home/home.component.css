@@ -54,3 +54,12 @@ ul {
 ul li {
     list-style-type: disc;
 }
+
+textarea {
+    resize: none;
+    height: auto;
+}
+
+.watch-link {
+    color: #003087;
+}
