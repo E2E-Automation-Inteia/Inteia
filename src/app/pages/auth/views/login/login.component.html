@@ -1,0 +1,42 @@
+<div>
+  <div *ngIf="loadpage">
+    <app-loading />
+  </div>
+
+  <div *ngIf="!loadpage">
+    <div class="hero bg-base-200 min-h-screen">
+      <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+        <div class="card-body">
+          <form
+            class="fieldset"
+            [formGroup]="loginForm"
+            (ngSubmit)="loginSession()"
+          >
+            <label class="fieldset-label">Email</label>
+            <input
+              type="email"
+              class="input"
+              placeholder="Email"
+              id="email"
+              formControlName="email"
+            />
+            <label class="fieldset-label">Password</label>
+            <input
+              type="password"
+              class="input"
+              placeholder="Password"
+              id="password"
+              formControlName="password"
+            />
+            <div>
+              <a routerLink="/auth/register" class="link link-hover"
+                >Crear cuenta</a
+              >
+            </div>
+            <button class="btn btn-neutral mt-4" type="submit">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

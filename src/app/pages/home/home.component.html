@@ -1,0 +1,22 @@
+<div class="bg-[#fbfbfb] min-h-screen">
+  <div class="flex py-5 justify-around px-5">
+    <button (click)="logOutSession()">
+      <lucide-icon [img]="logOut"></lucide-icon>
+    </button>
+    <app-search />
+    <button onclick="HomeModal.showModal()">
+      <lucide-icon [img]="plus"></lucide-icon>
+    </button>
+  </div>
+  <div>
+    <app-list />
+  </div>
+</div>
+
+<app-modal
+  [idModal]="idModal"
+  [titulo]="titulo"
+  [descripcion]="descripcion"
+  [option]="option"
+  [send]="send"
+/>

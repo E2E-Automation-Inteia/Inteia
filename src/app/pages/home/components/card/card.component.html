@@ -1,0 +1,14 @@
+<div class="card w-96 bg-base-100 card-md shadow-sm">
+    <div class="card-body">
+      <h2 class="card-title">{{id}}</h2>
+      <h3 class="card-title">{{name}} {{lastName}}</h3>
+      <p>{{email}}</p>
+      <p>{{password | textShort:10}}</p>
+      <div class="justify-end card-actions">
+        <button class="btn btn-primary" (click)="editmodal(id)">Editar</button>
+        <button class="btn btn-error" (click)="deleteUser(id)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  

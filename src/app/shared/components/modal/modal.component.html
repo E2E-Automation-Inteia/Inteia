@@ -1,0 +1,65 @@
+<dialog [id]="idModal" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">{{ titulo }}</h3>
+    <p class="py-4">{{ descripcion }}</p>
+    <div class="">
+      <div method="dialog">
+        <div>
+          <div *ngIf="option">
+            <p>{{ parrafoContent }}</p>
+          </div>
+          <form *ngIf="!option" [formGroup]="form" (ngSubmit)="executeSend()">
+            <div class="flex flex-col">
+              <div class="flex flex-col">
+                <label for="name">Name</label>
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Name"
+                  formControlName="name"
+                />
+              </div>
+              <div class="flex flex-col">
+                <label for="lastName">LastName</label>
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="LastName"
+                  formControlName="lastName"
+                />
+              </div>
+              <div class="flex flex-col">
+                <label for="email">Email</label>
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Email"
+                  formControlName="email"
+                />
+              </div>
+              <div class="flex flex-col">
+                <label for="password">Password</label>
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Password"
+                  formControlName="password"
+                />
+              </div>
+            </div>
+            <div class="flex gap-4 justify-end pt-8">
+              <button class="btn btn-success" type="submit">Aceptar</button>
+              <button
+                class="btn btn-error"
+                type="button"
+                (click)="closeModal()"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>

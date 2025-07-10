@@ -1,0 +1,28 @@
+<div>
+  <div *ngIf="loadpage">
+    <app-loading />
+  </div>
+  <div *ngIf="!loadpage" class="flex gap-5 justify-center flex-wrap">
+    <div *ngFor="let card of users()() | searchInput:newText(); let i = index">
+      <app-card
+        [id]="card.id"
+        [name]="card.name"
+        [lastName]="card.lastName"
+        [email]="card.email"
+        [password]="card.password"
+        (modal)="openModal($event)"
+        (delete)="deleteUser($event)"
+      />
+    </div>
+  </div>
+  <div>
+  </div>
+</div>
+
+<app-modal
+  [idModal]="idModal"
+  [titulo]="titulo"
+  [descripcion]="descripcion"
+  [option]="option"
+  [send]="send"
+/>
