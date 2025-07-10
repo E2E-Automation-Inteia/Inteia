@@ -1,0 +1,65 @@
+table {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 1rem;
+    text-align: left;
+}
+
+thead {
+    background-color: #003087;
+    color: #fff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+    color: #333;
+}
+
+tbody tr:hover {
+    background-color: rgba(37, 14, 41, 0.479);
+    transition: background-color 0.3s ease;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #eeeeee;
+    color: #2c2c2c;
+}
+
+tbody tr:nth-child(odd):hover {
+    background-color: #c0c0c0;
+
+}
+
+tbody tr:nth-child(even):hover {
+    background-color: rgba(248, 249, 250, 0.7);
+    transition: background-color 0.3s ease;
+}
+
+a {
+    color: #4c51bf;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul {
+    padding-left: 1.5rem;
+}
+
+ul li {
+    list-style-type: disc;
+}
+
+textarea {
+    resize: none;
+    height: auto;
+}
+
+.watch-link {
+    color: #003087;
+}
