@@ -1,0 +1,18 @@
+<mat-toolbar
+  [ngClass]="theme ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'"
+  class="shadow-md px-6 py-3 flex justify-between items-center transition-all duration-300"
+>
+  <span class="text-xl font-semibold">Panel de Administración</span>
+
+  <div class="flex items-center gap-4">
+    <button mat-icon-button (click)="toggleTheme.emit()" aria-label="Toggle Dark Mode">
+      <mat-icon [ngClass]="theme ? 'text-purple-400' : 'text-purple-700'">light_mode</mat-icon>
+    </button>
+    <button mat-icon-button>
+      <mat-icon [ngClass]="theme ? 'text-purple-400' : 'text-purple-700'">notifications</mat-icon>
+    </button>
+    <button mat-icon-button>
+      <mat-icon [ngClass]="theme ? 'text-purple-400' : 'text-purple-700'">account_circle</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>

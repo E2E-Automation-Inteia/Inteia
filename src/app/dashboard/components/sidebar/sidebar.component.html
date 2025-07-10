@@ -1,0 +1,42 @@
+<div class="h-full w-64 bg-gradient-to-b from-purple-700 to-indigo-900 text-white shadow-2xl font-exo">
+    <div class="p-6 text-2xl font-bold tracking-wide drop-shadow-md">
+      Inteia
+    </div>
+  
+    <mat-nav-list class="text-sm space-y-2 px-2">
+      <a
+        mat-list-item
+        disableRipple
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        class="hover:bg-indigo-600 px-4 py-3 flex justify-center items-center rounded-md transition duration-200 shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
+      >
+      <mat-icon class="text-lg mr-3 mt-0.5">dashboard</mat-icon>
+      <span class="text-base">Inicio</span>
+      
+      </a>
+  
+      <a
+        mat-list-item
+        disableRipple
+        routerLink="/dashboard/concepts"
+        routerLinkActive="active"
+        class="hover:bg-indigo-600 px-4 py-3 flex justify-center items-center rounded-md transition duration-200 shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
+      >
+        <mat-icon matListIcon>lightbulb</mat-icon>
+        <span class="ml-3">Conceptos</span>
+      </a>
+  
+      <a
+        mat-list-item
+        disableRipple
+        routerLink="/dashboard/usuarios"
+        routerLinkActive="active"
+        class="hover:bg-indigo-600 px-4 py-3 flex justify-center items-center rounded-md transition duration-200 shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
+      >
+        <mat-icon matListIcon>group</mat-icon>
+        <span class="ml-3">Usuarios</span>
+      </a>
+    </mat-nav-list>
+  </div>
+  

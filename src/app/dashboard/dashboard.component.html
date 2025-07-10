@@ -1,0 +1,17 @@
+<mat-sidenav-container class="h-screen font-exo" >
+    <mat-sidenav mode="side" opened class="w-64 bg-indigo-700 text-white">
+      <app-sidebar></app-sidebar>
+    </mat-sidenav>
+  
+    <mat-sidenav-content
+    [ngClass]="theme ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'"
+    class="transition-all duration-300"
+  >
+        <app-toolbar (toggleTheme)="toggleDarkMode()"></app-toolbar>
+  
+      <div class="p-6 min-h-screen">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  
