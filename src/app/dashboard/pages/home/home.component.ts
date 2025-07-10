@@ -1,12 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table'; 
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button'; 
-import { MatInputModule } from '@angular/material/input';
-import { HttpClient } from '@angular/common/http'; 
-import { Observable } from 'rxjs';
-import { FormsModule } from '@angular/forms'; 
-import { CommonModule } from '@angular/common'; 
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 interface Oportunidad {
   id: string;
@@ -22,37 +17,61 @@ interface Oportunidad {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [
-    MatTableModule,
-    MatIconModule,
-    MatButtonModule,
-    MatInputModule,
-    FormsModule,
-    CommonModule
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
-  displayedColumns: string[] = ['id', 'descripcion', 'fechaMaximaPostulacion', 'departamento', 'aspectosImportantes', 'urlConvocatoria'];
-  dataSource!: MatTableDataSource<Oportunidad>;
-
-  expandedRow: number | null = null;
-
   oportunidades: Oportunidad[] = [];
+  expandedRow: number | null = null;
+  oportunidadSeleccionada: Oportunidad = this.inicializarOportunidad();
+
+  @ViewChild('dialogRef') dialogRef!: ElementRef<HTMLDialogElement>;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.fetchOportunidades().subscribe((data: Oportunidad[]) => {
-      this.oportunidades = data;
-      this.dataSource = new MatTableDataSource(this.oportunidades);
-    });
+    this.fetchOportunidades();
   }
 
-  fetchOportunidades(): Observable<Oportunidad[]> {
-    return this.http.get<Oportunidad[]>('http://localhost:5234/api/oportunidades');
+  fetchOportunidades(): void {
+    this.http.get<Oportunidad[]>('http://localhost:5234/api/oportunidades')
+      .subscribe(data => this.oportunidades = data);
+  }
+
+  abrirModal(oportunidad: Oportunidad): void {
+    this.oportunidadSeleccionada = { ...oportunidad }; // Copia para no mutar
+    this.dialogRef.nativeElement.showModal();
+  }
+
+  cerrarModal(): void {
+    this.dialogRef.nativeElement.close();
+  }
+
+  guardarCambios(): void {
+    const id = this.oportunidadSeleccionada.id;
+    this.http.put(`http://localhost:5234/api/oportunidades/${id}`, this.oportunidadSeleccionada)
+      .subscribe({
+        next: () => {
+          const idx = this.oportunidades.findIndex(o => o.id === id);
+          if (idx !== -1) this.oportunidades[idx] = { ...this.oportunidadSeleccionada };
+          this.cerrarModal();
+        },
+        error: err => console.error('Error al guardar', err)
+      });
+  }
+
+  inicializarOportunidad(): Oportunidad {
+    return {
+      id: '',
+      esPostulable: true,
+      idProceso: '',
+      descripcion: '',
+      fechaMaximaPostulacion: '',
+      departamento: '',
+      aspectosImportantes: [],
+      urlConvocatoria: ''
+    };
   }
 
   toggleExpand(index: number): void {
@@ -60,7 +79,9 @@ export class HomeComponent implements OnInit {
   }
 
   togglePostulable(index: number): void {
-    this.oportunidades[index].esPostulable = !this.oportunidades[index].esPostulable;
+    const o = this.oportunidades[index];
+    o.esPostulable = !o.esPostulable;
+    this.http.put(`http://localhost:5234/api/oportunidades/${o.id}`, o)
+      .subscribe();
   }
-  
 }
