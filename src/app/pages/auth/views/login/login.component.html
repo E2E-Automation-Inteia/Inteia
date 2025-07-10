@@ -1,42 +1,41 @@
-<div>
-  <div *ngIf="loadpage">
-    <app-loading />
-  </div>
+<div *ngIf="loadpage">
+  <app-loading />
+</div>
 
-  <div *ngIf="!loadpage">
-    <div class="hero bg-base-200 min-h-screen">
-      <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-        <div class="card-body">
-          <form
-            class="fieldset"
-            [formGroup]="loginForm"
-            (ngSubmit)="loginSession()"
-          >
-            <label class="fieldset-label">Email</label>
-            <input
-              type="email"
-              class="input"
-              placeholder="Email"
-              id="email"
-              formControlName="email"
-            />
-            <label class="fieldset-label">Password</label>
-            <input
-              type="password"
-              class="input"
-              placeholder="Password"
-              id="password"
-              formControlName="password"
-            />
-            <div>
-              <a routerLink="/auth/register" class="link link-hover"
-                >Crear cuenta</a
-              >
-            </div>
-            <button class="btn btn-neutral mt-4" type="submit">Login</button>
-          </form>
-        </div>
-      </div>
+
+<div class="signLog font-exo" [ngClass]="{ 'dark-mode': theme, 'light-mode': !theme }">
+  <div class="w-full flex justify-end pe-                                                                                                                                                                                                                                                                                                                                                     ">
+    <span class="text-gray-500 dark:text-gray-400">{{isDarkMode}}</span>
+    <input
+      type="checkbox"
+      [checked]="theme"
+      class="toggle border-indigo-600 bg-indigo-500 checked:border-purple-700 checked:bg-purple-400 checked:text-purple-800"
+      (click)="toggleDarkMode()"
+    />
+    </div>
+  <div class="main">
+    <input type="checkbox" id="chk" aria-hidden="true" />
+
+    <div class="signup">
+      <form [formGroup]="registerForm" (ngSubmit)="registerUserSession()">
+        <label class="lab" for="chk" aria-hidden="true">Sign up</label>
+        <input class="inp" type="text" name="txt" placeholder="Nombre" formControlName="name" required="" />
+        <input class="inp" type="text" name="last" placeholder="Apellido" formControlName="lastName" required />
+        <input class="inp" type="email" name="email" placeholder="Correo" formControlName="email" required />
+
+        <input class="inp" type="password" name="pswd" placeholder="Password" required />
+        <button class="but" type="submit">Sign up</button>
+      </form>
+    </div>
+
+    <div class="login">
+      <form [formGroup]="loginForm" (ngSubmit)="loginSession()">
+        <label class="lab" for="chk" aria-hidden="true">Login</label>
+        <input class="inp" type="email" name="email" placeholder="Email" required id="email" formControlName="email" />
+        <input class="inp" type="password" name="pswd" placeholder="Password" required id="password"
+          formControlName="password" />
+        <button class="but" type="submit">Login</button>
+      </form>
     </div>
   </div>
 </div>
