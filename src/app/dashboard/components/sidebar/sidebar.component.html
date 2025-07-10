@@ -1,19 +1,19 @@
-<div class="h-full w-64 bg-gradient-to-b from-purple-700 to-indigo-900 text-white shadow-2xl font-exo">
-    <div class="p-6 text-2xl font-bold tracking-wide drop-shadow-md">
-      Inteia
+<div class="h-full w-64 bg-gradient-to-b from-[#003865] to-[#231b36] text-white shadow-2xl font-exo flex flex-col">
+
+    <div class="p-6 flex items-center justify-start">
+      <img src="assets/logo-inteia.svg" alt="Inteia Logo" class="w-44 drop-shadow-md logo-with-shadow " />
     </div>
   
-    <mat-nav-list class="text-sm space-y-2 px-2">
+    <nav class="mt-4 flex-1 space-y-2 px-3">
       <a
         mat-list-item
         disableRipple
         routerLink="/dashboard"
         routerLinkActive="active"
-        class="hover:bg-indigo-600 px-4 py-3 flex justify-center items-center rounded-md transition duration-200 shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
+        class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none"
       >
-      <mat-icon class="text-lg mr-3 mt-0.5">dashboard</mat-icon>
-      <span class="text-base">Inicio</span>
-      
+        <mat-icon class="text-lg">dashboard</mat-icon>
+        <span class="text-base">Inicio</span>
       </a>
   
       <a
@@ -21,10 +21,10 @@
         disableRipple
         routerLink="/dashboard/concepts"
         routerLinkActive="active"
-        class="hover:bg-indigo-600 px-4 py-3 flex justify-center items-center rounded-md transition duration-200 shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
+        class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none"
       >
-        <mat-icon matListIcon>lightbulb</mat-icon>
-        <span class="ml-3">Conceptos</span>
+        <mat-icon class="text-lg">lightbulb</mat-icon>
+        <span class="text-base">Conceptos</span>
       </a>
   
       <a
@@ -32,11 +32,23 @@
         disableRipple
         routerLink="/dashboard/usuarios"
         routerLinkActive="active"
-        class="hover:bg-indigo-600 px-4 py-3 flex justify-center items-center rounded-md transition duration-200 shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
+        class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none"
       >
-        <mat-icon matListIcon>group</mat-icon>
-        <span class="ml-3">Usuarios</span>
+        <mat-icon class="text-lg">group</mat-icon>
+        <span class="text-base">Usuarios</span>
       </a>
-    </mat-nav-list>
+    </nav>
+  
+    <div class="p-4 border-t border-[#26507b] mt-auto">
+      <a
+        mat-list-item
+        disableRipple
+        routerLink="/dashboard/settings"
+        class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-[#154273] transition"
+      >
+        <mat-icon class="text-lg">settings</mat-icon>
+        <span class="text-base">Ajustes</span>
+      </a>
+    </div>
   </div>
   

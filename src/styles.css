@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 @plugin "daisyui";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 html,
 body {
