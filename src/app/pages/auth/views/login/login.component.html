@@ -4,26 +4,24 @@
 
 
 <div class="signLog font-exo" [ngClass]="{ 'dark-mode': theme, 'light-mode': !theme }">
-  <div class="w-full flex justify-end pe-                                                                                                                                                                                                                                                                                                                                                     ">
+  <div
+    class="w-full flex justify-end pe-                                                                                                                                                                                                                                                                                                                                                     ">
     <span class="text-gray-500 dark:text-gray-400">{{isDarkMode}}</span>
-    <input
-      type="checkbox"
-      [checked]="theme"
+    <input type="checkbox" [checked]="theme"
       class="toggle border-indigo-600 bg-indigo-500 checked:border-purple-700 checked:bg-purple-400 checked:text-purple-800"
-      (click)="toggleDarkMode()"
-    />
-    </div>
+      (click)="toggleDarkMode()" />
+  </div>
   <div class="main">
     <input type="checkbox" id="chk" aria-hidden="true" />
 
     <div class="signup">
       <form [formGroup]="registerForm" (ngSubmit)="registerUserSession()">
         <label class="lab" for="chk" aria-hidden="true">Sign up</label>
-        <input class="inp" type="text" name="txt" placeholder="Nombre" formControlName="name" required="" />
-        <input class="inp" type="text" name="last" placeholder="Apellido" formControlName="lastName" required />
-        <input class="inp" type="email" name="email" placeholder="Correo" formControlName="email" required />
-
-        <input class="inp" type="password" name="pswd" placeholder="Password" required />
+        <input class="inp" type="text" name="name" placeholder="Nombre" id="nameR" formControlName="name" required />
+        <input class="inp" type="email" name="email" placeholder="Correo" id="emailR" formControlName="email"
+          required />
+        <input class="inp" type="password" name="password" placeholder="Password" id="passwordR"
+          formControlName="password" required />
         <button class="but" type="submit">Sign up</button>
       </form>
     </div>

@@ -13,7 +13,6 @@ import { ModalComponent } from "../../../../shared/components/modal/modal.compon
 export class CardComponent {
   @Input() id!:number
   @Input() name!: string;
-  @Input() lastName!: string;
   @Input() email!: string;
   @Input() password!: string;
   @Output() modal = new EventEmitter<number>()

@@ -22,7 +22,6 @@ export default class LoginComponent {
   private readonly fb = inject(FormBuilder)
   private readonly router = inject(Router)
   private readonly loading = inject(LoadingService)
-  private readonly signalsServices = inject(SignalsService)
   public themaService = inject(ThemaService)
 
   loginForm: FormGroup
@@ -38,7 +37,6 @@ export default class LoginComponent {
     })
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
-      lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     })

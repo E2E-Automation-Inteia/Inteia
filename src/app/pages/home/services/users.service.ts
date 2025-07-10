@@ -12,32 +12,23 @@ const URL_API_USER = `${environment.apiUrlPrivate}/user`;
 export class UsersService {
   private readonly http = inject(HttpClient);
 
-  private getHeader() {
-    const token = localStorage.getItem('token') ?? '';
-    
-    return {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
-  }
-
   get(): Observable<User[]> {
-    return this.http.get<User[]>(URL_API_USER, { headers: this.getHeader() });
+    return this.http.get<User[]>(URL_API_USER);
   }
 
   getById(id: number): Observable<User> {
-    return this.http.get<User>(`${URL_API_USER}/${id}`, { headers: this.getHeader() });
+    return this.http.get<User>(`${URL_API_USER}/${id}`);
   }
 
   create(user: UserRequest): Observable<UserRequest> {
-    return this.http.post<UserRequest>(URL_API_USER, user, { headers: this.getHeader() });
+    return this.http.post<UserRequest>(URL_API_USER, user);
   }
 
   update(user: UserRequest, id: number): Observable<any> {
-    return this.http.put(`${URL_API_USER}/${id}`, user, { headers: this.getHeader() });
+    return this.http.put(`${URL_API_USER}/${id}`, user);
   }
 
   delete(id: number) {
-    return this.http.delete(`${URL_API_USER}/${id}`, { headers: this.getHeader() });
+    return this.http.delete(`${URL_API_USER}/${id}`);
   }
 }

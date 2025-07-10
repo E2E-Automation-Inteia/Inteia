@@ -13,7 +13,6 @@ export class SignalsService {
   usersSignal = signal<User[]>([])
   newData = signal<UserRequest>({
     name: '',
-    lastName: '',
     email: '',
     password: ''
   });

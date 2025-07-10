@@ -20,7 +20,6 @@ export class ModalComponent {
   constructor(){
     this.form = this.fs.group({
       name: ['', Validators.required],
-      lastName:['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     })
