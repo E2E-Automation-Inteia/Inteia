@@ -6,46 +6,94 @@ import { Router, RouterModule } from '@angular/router';
 import { LoadingService } from '../../../../shared/services/loading.service';
 import { LoadingComponent } from "../../../../shared/components/loading/loading.component";
 import { CommonModule } from '@angular/common';
+import { SignalsService } from '../../../../shared/services/signals.service';
+import { ThemaService } from '../../../../shared/services/thema.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, RouterModule, LoadingComponent,CommonModule],
+  imports: [ReactiveFormsModule, HttpClientModule, RouterModule, LoadingComponent, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
-  providers:[AuthService]
+  providers: [AuthService]
 })
 export default class LoginComponent {
   private readonly authService = inject(AuthService)
   private readonly fb = inject(FormBuilder)
   private readonly router = inject(Router)
   private readonly loading = inject(LoadingService)
+  private readonly signalsServices = inject(SignalsService)
+  public themaService = inject(ThemaService)
 
   loginForm: FormGroup
+  registerForm: FormGroup
   loadpage = this.loading.isloading()
+  isDarkMode = ''
+  theme = false
 
   constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     })
+    this.registerForm = this.fb.group({
+      name: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    })
+
+    this.themaService.theme$.subscribe((isDark) => {
+      this.theme = isDark;
+      this.isDarkMode = isDark ? 'Dark Mode' : 'Light Mode';
+    });
 
   }
   loginSession() {
     if (this.loginForm?.valid) {
       this.authService.login(this.loginForm.value).subscribe({
-        next:(res)=>{          
-          localStorage.setItem('token',(res.token))
+        next: (res) => {
+          localStorage.setItem('token', (res.token))
           this.loading.toggleLoading()
           this.router.navigate(['/home'])
         },
-        error:(e)=>{
-          console.log('se genero un error',e);
+        error: (e) => {
+          console.log('se genero un error', e);
         },
-        complete:()=>{
+        complete: () => {
           this.loading.toggleLoading()
         }
       })
+    }
+  }
+  registerUserSession() {
+    if (this.registerForm?.valid) {
+      this.authService.register(this.registerForm.value).subscribe({
+        next: (res: any) => {
+          console.log('usuario creado exitosamente', res);
+          localStorage.setItem('token', res.token)
+          this.loading.toggleLoading()
+          this.router.navigate(['/home'])
+        },
+        error: (e) => {
+          console.log('se genero un error al crear el usuario', e);
+
+        },
+        complete: () => {
+          this.loading.toggleLoading()
+        }
+      })
+    }
+  }
+
+  toggleDarkMode() {
+    this.themaService.toggle();
+    if (this.themaService.state) {
+      this.isDarkMode = 'Dark Mode';
+      this.theme = this.themaService.state
+    } else {
+      this.isDarkMode = 'Light Mode';
+      this.theme = this.themaService.state
     }
   }
 

@@ -16,10 +16,6 @@ export const routes: Routes = [
                 pathMatch: 'full'
             },
             {
-                path: 'register',
-                loadComponent: () => import('./pages/auth/views/register/register.component'),
-            },
-            {
                 path:'login',
                 loadComponent:()=>import('./pages/auth/views/login/login.component'),
             }
@@ -28,6 +24,10 @@ export const routes: Routes = [
     {
         path: 'home',
         loadComponent: () => import('./pages/home/home.component')
+    },
+    {
+        path: 'concepts',
+        loadComponent: () => import('./concepts/concepts.component')
     },
     {
         path: 'public',
