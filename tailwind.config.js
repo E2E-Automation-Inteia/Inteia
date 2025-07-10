@@ -6,5 +6,6 @@ export default {
   theme: {
     extend: {},
   },
+  // @ts-ignore
   plugins: [require('daisyui')],
 };
