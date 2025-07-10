@@ -49,6 +49,16 @@
         <mat-icon class="text-lg">settings</mat-icon>
         <span class="text-base">Ajustes</span>
       </a>
-    </div>
+      <a
+        mat-list-item
+        disableRipple
+        routerLink="/dashboard/events"
+        routerLinkActive="active"
+        class="hover:bg-indigo-600 px-4 py-3 flex justify-center items-center rounded-md transition duration-200 shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
+      >
+      <mat-icon matListIcon>calendar_today</mat-icon>
+        <span class="ml-3">Eventos</span>
+      </a>
+    </mat-nav-list>
   </div>
   
