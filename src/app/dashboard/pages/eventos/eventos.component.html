@@ -1,0 +1,34 @@
+<div class="mb-4 flex gap-2">
+  <button mat-button color="primary" (click)="addRow()">Agregar registro</button>
+  <button mat-button color="warn" (click)="removeSelectedRows()">Eliminar seleccionados</button>
+  <button mat-button (click)="toggleEdit()">
+    {{ isEditing ? 'Finalizar edición' : 'Editar registros' }}
+  </button>
+</div>
+
+<table mat-table [dataSource]="data" class="mat-elevation-z8">
+
+  <!-- Checkbox -->
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      <input type="checkbox" (change)="toggleSelection(element.id)" />
+    </td>
+  </ng-container>
+
+  <!-- Otras columnas -->
+  <ng-container *ngFor="let column of displayedColumns.slice(1)" [matColumnDef]="column">
+    <th mat-header-cell *matHeaderCellDef> {{ column }} </th>
+    <td mat-cell *matCellDef="let element">
+      <ng-container *ngIf="isEditing; else viewMode">
+        <input [(ngModel)]="element[column]" class="w-full border px-1" />
+      </ng-container>
+      <ng-template #viewMode>
+        {{ element[column] }}
+      </ng-template>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
