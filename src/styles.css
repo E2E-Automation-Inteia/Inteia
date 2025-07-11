@@ -3,7 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 @plugin "daisyui";
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 html,
 body {
@@ -32,4 +31,18 @@ body.dark {
 .light-mode {
     background-color: white;
     color: black;
+}
+
+@media (min-width: 640px) {
+    .sm\:text-5xl {
+        font-size: 3rem !important;
+        line-height: 1;
+    }
+}
+
+@media (min-width: 768px) {
+    .md\:text-7xl {
+        font-size: 4.5rem !important;
+        line-height: 1;
+    }
 }
