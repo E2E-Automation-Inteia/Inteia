@@ -53,7 +53,7 @@ export default class LoginComponent {
         next: (res) => {
           localStorage.setItem('token', (res.token))
           this.loading.toggleLoading()
-          this.router.navigate(['/home'])
+          this.router.navigate(['/dashboard'])
         },
         error: (e) => {
           console.log('se genero un error', e);
@@ -71,7 +71,7 @@ export default class LoginComponent {
           console.log('usuario creado exitosamente', res);
           localStorage.setItem('token', res.token)
           this.loading.toggleLoading()
-          this.router.navigate(['/home'])
+          this.router.navigate(['/dashboard'])
         },
         error: (e) => {
           console.log('se genero un error al crear el usuario', e);
