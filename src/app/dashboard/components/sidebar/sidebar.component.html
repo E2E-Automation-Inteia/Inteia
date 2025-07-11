@@ -1,64 +1,44 @@
 <div class="h-full w-64 bg-gradient-to-b from-[#003865] to-[#231b36] text-white shadow-2xl font-exo flex flex-col">
 
-    <div class="p-6 flex items-center justify-start">
-      <img src="assets/logo-inteia.svg" alt="Inteia Logo" class="w-44 drop-shadow-md logo-with-shadow " />
-    </div>
-  
-    <nav class="mt-4 flex-1 space-y-2 px-3">
-      <a
-        mat-list-item
-        disableRipple
-        routerLink="/dashboard"
-        routerLinkActive="active"
-        class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none"
-      >
-        <mat-icon class="text-lg">dashboard</mat-icon>
-        <span class="text-base">Inicio</span>
-      </a>
-  
-      <a
-        mat-list-item
-        disableRipple
-        routerLink="/dashboard/concepts"
-        routerLinkActive="active"
-        class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none"
-      >
-        <mat-icon class="text-lg">lightbulb</mat-icon>
-        <span class="text-base">Conceptos</span>
-      </a>
-  
-      <a
-        mat-list-item
-        disableRipple
-        routerLink="/dashboard/usuarios"
-        routerLinkActive="active"
-        class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none"
-      >
-        <mat-icon class="text-lg">group</mat-icon>
-        <span class="text-base">Usuarios</span>
-      </a>
-    </nav>
-  
-    <div class="p-4 border-t border-[#26507b] mt-auto">
-      <a
-        mat-list-item
-        disableRipple
-        routerLink="/dashboard/settings"
-        class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-[#154273] transition"
-      >
-        <mat-icon class="text-lg">settings</mat-icon>
-        <span class="text-base">Ajustes</span>
-      </a>
-      <a
+  <div class="p-6 flex items-center justify-start">
+    <img src="assets/logo-inteia.svg" alt="Inteia Logo" class="w-44 drop-shadow-md logo-with-shadow " />
+  </div>
+
+  <nav class="mt-4 flex-1 space-y-2 px-3">
+    <a mat-list-item disableRipple routerLink="/dashboard" routerLinkActive="active"
+      class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none">
+      <mat-icon class="text-lg">dashboard</mat-icon>
+      <span class="text-base">Oportunidades</span>
+    </a>
+
+    <a mat-list-item disableRipple routerLink="/dashboard/vinculadores" routerLinkActive="active"
+      class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none">
+      <mat-icon class="text-lg">person_add</mat-icon>
+      <span class="text-base">Vinculadores</span>
+    </a>
+
+    <a mat-list-item disableRipple routerLink="/dashboard/usuarios" routerLinkActive="active"
+      class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none">
+      <mat-icon class="text-lg">group</mat-icon>
+      <span class="text-base">Usuarios</span>
+    </a>
+          <a
         mat-list-item
         disableRipple
         routerLink="/dashboard/events"
         routerLinkActive="active"
-        class="hover:bg-indigo-600 px-4 py-3 flex justify-center items-center rounded-md transition duration-200 shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
+      class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-[#154273] transition duration-200 focus:outline-none">
       >
       <mat-icon matListIcon>calendar_today</mat-icon>
         <span class="ml-3">Eventos</span>
       </a>
-    </mat-nav-list>
+  </nav>
+
+  <div class="p-4 border-t border-[#26507b] mt-auto">
+    <a mat-list-item disableRipple routerLink="/dashboard/settings"
+      class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-[#154273] transition">
+      <mat-icon class="text-lg">settings</mat-icon>
+      <span class="text-base">Ajustes</span>
+    </a>
   </div>
-  
+</div>
