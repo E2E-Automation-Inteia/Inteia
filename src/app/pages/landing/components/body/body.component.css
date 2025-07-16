@@ -1,3 +1,9 @@
+@import url(https://fonts.googleapis.com/css?family=Exo:100);
+
+.font-exo{
+  font: 400 16px/1.5 exo, ubuntu, "segoe ui", helvetica, arial, sans-serif;
+}
+
 /* Animations */
 @-webkit-keyframes bg-scrolling-reverse {
   100% {
