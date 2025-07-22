@@ -1,10 +1,23 @@
-<app-list 
-[TituloTabla]="'Eventos'"
-[filters]="filtros"
-(filterChanged)="aplicarFiltros($event)"
-(searchChanged)="buscar($event)"
-[columnas]="columnas"
-[data]="data"
-(onEditar)="abrirModal($event)"
-(onEliminar)="eliminar($event)"
-></app-list>
+<app-list
+  [TituloTabla]="'Eventos'"
+
+  [filters]="filtros"
+  (filterChanged)="aplicarFiltros($event)"
+  (searchChanged)="buscar($event)"
+  (clearFiltersEvent)="reset()"
+  
+  [columnas]="columnas"
+  [data]="data"
+  (onEditar)="abrirModal($event)"
+  (onEliminar)="eliminar($event)"
+
+  [totalItems]="totalElementos"
+  [itemsPerPage]="elementosPorPagina"
+  [(currentPage)]="paginaActual"
+
+  [selectedItem]="EventoSeleccionado"
+  (saveItem)="guardarEventoDesdeModal($event)"
+  
+>
+  ></app-list
+>

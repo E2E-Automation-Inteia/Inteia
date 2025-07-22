@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { Evento } from '../../../interfaces/events.interface';
@@ -18,16 +18,28 @@ import { dinamycFilters } from '../../../interfaces/dinamycList';
 })
 export class EventosComponent {
   EventoSeleccionado: Evento = this.inicializarEvento();
+
   expandedRow: number | null = null;
   filtros: dinamycFilters[] = [
-    { key: 'nombre', value: 'nombre', type: 'select', options: [] },
-    { key: 'ciudad', value: 'ciudad', type: 'select', options: [] },
+    { key: 'nombre', value: '', type: 'select', options: [] },
+    { key: 'ciudad', value: '', type: 'select', options: [] },
   ]
-  columnas: string[] = ['nombre', 'areaConsultoria', 'fecha', 'ciudad', 'organizador', 'paginaWeb', 'notas'];
-  data: Evento[] = [];
 
-  @ViewChild('dialogRef') dialogRef!: ElementRef<HTMLDialogElement>;
-  constructor(private readonly http: HttpClient, private readonly eventoService: EventosService) { }
+  columnas: string[] = ['nombre', 'areaConsultoria', 'fecha', 'ciudad', 'organizador', 'paginaWeb', 'notas'];
+
+  paginaActual: number = 1;
+  elementosPorPagina: number = 5;
+  totalElementos: number = 0;
+
+  data: Evento[] = [];
+  originalData: Evento[] = [];
+  terminoBusqueda: string = '';
+  filtrosActivos: dinamycFilters[] = [];
+
+  constructor(
+    private readonly http: HttpClient,
+    private readonly eventoService: EventosService,
+  ) { }
 
   ngOnInit(): void {
     this.obtenerEventos();
@@ -48,75 +60,103 @@ export class EventosComponent {
 
   obtenerEventos(): void {
     this.eventoService.get().subscribe((data: Evento[]) => {
-      this.data = data;
+      this.originalData = [...data];
+      this.data = [...data];
+
+      this.totalElementos = data.length;
 
       this.filtros.forEach(filter => {
-        if (filter.key === 'nombre') {
-          const nombresUnicos = Array.from(new Set(data.map(evento => evento.nombre)))
-            .filter(nombre => nombre);
-          filter.options = nombresUnicos;
-        }
-        else if(filter.key === 'ciudad') {
-          const nombresUnicos = Array.from(new Set(data.map(evento => evento.ciudad)))
-            .filter(nombre => nombre);
-          filter.options = nombresUnicos;
-        }
-      });
-    });
-  }
-
-  aplicarFiltros(filtros: dinamycFilters[]): void {
-    this.data= this.data.filter(evento => {
-      return filtros.every(filter => {
-        if (filter.type === 'text') {
-          return (evento[filter.key as keyof Evento])?.toLowerCase().includes(filter.value.toLowerCase());
-        } else if (filter.type === 'date') {
-          return new Date(evento[filter.key as keyof Evento]) >= new Date(filter.value);
-        }
-        return true;
+        const valoresUnicos = Array.from(new Set(data.map(evento => evento[filter.key as keyof Evento])))
+          .filter(val => val);
+        filter.options = valoresUnicos;
       });
     });
   }
 
   buscar(termino: string): void {
-    this.data= this.data.filter(evento => {
-      return Object.values(evento).some(value =>
-        value.toString().toLowerCase().includes(termino.toLowerCase())
-      );
-    });
+    this.terminoBusqueda = termino;
+    this.actualizarData();
   }
 
-  abrirModal(e: Evento | null): void {
+  aplicarFiltros(filtros: dinamycFilters[]): void {
+    this.filtrosActivos = filtros;
+    this.actualizarData();
+  }
+  actualizarData(): void {
+    let filtrados = [...this.originalData];
+
+    if (this.filtrosActivos.length > 0) {
+      filtrados = filtrados.filter(evento => {
+        return this.filtrosActivos.every(filter => {
+          const valor = evento[filter.key as keyof Evento]?.toString().toLowerCase();
+          const valorFiltro = filter.value.toLowerCase();
+
+          if (filter.type === 'text' || filter.type === 'select') {
+            return valor?.includes(valorFiltro);
+          } else if (filter.type === 'date') {
+            return new Date(valor || '') >= new Date(valorFiltro);
+          }
+
+          return true;
+        });
+      });
+    }
+
+    if (this.terminoBusqueda) {
+      filtrados = filtrados.filter(evento => {
+        return Object.values(evento).some(value =>
+          value?.toString().toLowerCase().includes(this.terminoBusqueda)
+        );
+      });
+    }
+
+    this.data = filtrados;
+  }
+
+  reset(): void {
+    this.filtrosActivos = [];
+    this.terminoBusqueda = '';
+    this.paginaActual = 1;
+
+    this.filtros = this.filtros.map(f => ({
+      key: f.key,
+      value: '',
+      type: f.type,
+      options: [...f.options || []]
+    }));
+
+    this.actualizarData();
+  }
+
+
+
+  abrirModal(e?: Evento) {
     this.EventoSeleccionado = e ? { ...e } : this.inicializarEvento();
-    this.dialogRef.nativeElement.showModal();
   }
 
-  cerrarModal(): void {
-    this.dialogRef.nativeElement.close();
-  }
 
-  guardarCambios(): void {
-    if (this.EventoSeleccionado.id) {
-      this.eventoService.update(this.EventoSeleccionado, this.EventoSeleccionado.id)
-        .subscribe(() => {
-          const idx = this.data.findIndex(e => e.id === this.EventoSeleccionado.id);
-          if (idx !== -1) this.data[idx] = { ...this.EventoSeleccionado };
-          this.cerrarModal();
-        });
+  guardarEventoDesdeModal(evento: Evento) {
+    if (evento.id) {
+      // actualizar
+      this.eventoService.update(evento, evento.id).subscribe(() => {
+        const idx = this.originalData.findIndex(e => e.id === evento.id);
+        if (idx !== -1) this.originalData[idx] = evento;
+        this.actualizarData();
+      });
     } else {
-      this.eventoService.create(this.EventoSeleccionado)
-        .subscribe((nuevo: Evento) => {
-          this.data.push(nuevo);
-          this.cerrarModal();
-        });
+      // crear
+      this.eventoService.create(evento).subscribe((nuevo: Evento) => {
+        this.originalData.push(nuevo);
+        this.actualizarData();
+      });
     }
   }
 
-  eliminar(id: string): void {
-    if (!confirm('¿Estás seguro de eliminar este evento?')) return;
-    this.eventoService.delete(id)
-      .subscribe(() => {
-        this.data= this.data.filter(e => e.id !== id);
-      });
+    eliminar(id: string): void {
+      if(!confirm('¿Estás seguro de eliminar este evento?')) return;
+    this.eventoService.delete(id).subscribe(() => {
+      this.originalData = this.originalData.filter(e => e.id !== id);
+      this.actualizarData();
+    });
   }
 }

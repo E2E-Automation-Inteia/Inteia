@@ -1,16 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListComponent } from '../../../shared/components/list/list.component';
+import { dinamycFilters } from '../../../interfaces/dinamycList';
+import { VinculadoresService } from './servicio/vinculadores.service';
+import { TipoVinculador, Vinculador } from '../../../interfaces/Vinculador';
 
-
-interface Vinculador {
-  id: string;
-  nombre: string;
-  ciudad: string;
-  correo: string;
-}
 
 @Component({
   selector: 'app-vinculadores',
@@ -20,63 +16,142 @@ interface Vinculador {
   styleUrls: ['./vinculadores.component.css']
 })
 export class VinculadoresComponent implements OnInit {
-  vinculadores: Vinculador[] = [];
-  vinculadorSeleccionado: Vinculador = this.inicializarVinculador();
+  ElementoSeleccionado: Vinculador = this.inicializar();
+
   expandedRow: number | null = null;
+  filtros: dinamycFilters[] = []
 
-  @ViewChild('dialogRef') dialogRef!: ElementRef<HTMLDialogElement>;
+  columnas: string[] = Object.keys(this.inicializar());
 
-  constructor(private http: HttpClient) {}
-  
+  paginaActual: number = 1;
+  elementosPorPagina: number = 5;
+  totalElementos: number = 0;
+
+  data: Vinculador[] = [];
+  originalData: Vinculador[] = [];
+  terminoBusqueda: string = '';
+  filtrosActivos: dinamycFilters[] = [];
+
+  constructor(
+    private readonly servicio: VinculadoresService
+  ) { }
+
   ngOnInit(): void {
-    this.obtenerVinculadores();
+    this.obtenerElementos();
   }
 
-  inicializarVinculador(): Vinculador {
+  inicializar(): Vinculador {
     return {
-      id: '',
+      tipo: TipoVinculador.Agremiaciones,
       nombre: '',
       ciudad: '',
-      correo: ''
+      direccion: '',
+      telefono: '',
+      correo: '',
+      web: '',
+      id: ''
     };
   }
 
-  obtenerVinculadores(): void {
-    this.http.get<Vinculador[]>('http://localhost:5234/api/Vinculadores')
-      .subscribe(data => this.vinculadores = data);
+  obtenerElementos(): void {
+    this.servicio.get().subscribe((data: any[]) => {
+      this.originalData = [...data];
+      this.data = [...data];
+
+      this.totalElementos = data.length;
+
+      this.filtros.forEach(filter => {
+        const valoresUnicos = Array.from(new Set(data.map(Vinculador => Vinculador[filter.key as keyof any])))
+          .filter(val => val);
+        filter.options = valoresUnicos;
+      });
+    });
   }
 
-  abrirModal(v: Vinculador | null): void {
-    this.vinculadorSeleccionado = v ? { ...v } : this.inicializarVinculador();
-    this.dialogRef.nativeElement.showModal();
+  buscar(termino: string): void {
+    this.terminoBusqueda = termino;
+    this.actualizarData();
   }
 
-  cerrarModal(): void {
-    this.dialogRef.nativeElement.close();
+  aplicarFiltros(filtros: dinamycFilters[]): void {
+    this.filtrosActivos = filtros;
+    this.actualizarData();
   }
+  actualizarData(): void {
+    let filtrados = [...this.originalData];
 
-  guardarCambios(): void {
-    if (this.vinculadorSeleccionado.id) {
-      this.http.put(`http://localhost:5234/api/Vinculadores`, this.vinculadorSeleccionado)
-        .subscribe(() => {
-          const idx = this.vinculadores.findIndex(v => v.id === this.vinculadorSeleccionado.id);
-          if (idx !== -1) this.vinculadores[idx] = { ...this.vinculadorSeleccionado };
-          this.cerrarModal();
+    if (this.filtrosActivos.length > 0) {
+      filtrados = filtrados.filter(Vinculador => {
+        return this.filtrosActivos.every(filter => {
+          const valor = Vinculador[filter.key as keyof Vinculador]?.toString().toLowerCase();
+          const valorFiltro = filter.value.toLowerCase();
+
+          if (filter.type === 'text' || filter.type === 'select') {
+            return valor?.includes(valorFiltro);
+          } else if (filter.type === 'date') {
+            return new Date(valor || '') >= new Date(valorFiltro);
+          }
+
+          return true;
         });
+      });
+    }
+
+    if (this.terminoBusqueda) {
+      filtrados = filtrados.filter(Vinculador => {
+        return Object.values(Vinculador).some(value =>
+          value?.toString().toLowerCase().includes(this.terminoBusqueda)
+        );
+      });
+    }
+
+    this.data = filtrados;
+  }
+
+  reset(): void {
+    this.filtrosActivos = [];
+    this.terminoBusqueda = '';
+    this.paginaActual = 1;
+
+    this.filtros = this.filtros.map(f => ({
+      key: f.key,
+      value: '',
+      type: f.type,
+      options: [...f.options || []]
+    }));
+
+    this.actualizarData();
+  }
+
+
+
+  abrirModal(e?: Vinculador) {
+    this.ElementoSeleccionado = e ? { ...e } : this.inicializar();
+  }
+
+
+  guardarDesdeModal(Vinculador: Vinculador) {
+    if (Vinculador.id) {
+      // actualizar
+      this.servicio.update(Vinculador, Vinculador.id).subscribe(() => {
+        const idx = this.originalData.findIndex(e => e.id === Vinculador.id);
+        if (idx !== -1) this.originalData[idx] = Vinculador;
+        this.actualizarData();
+      });
     } else {
-      this.http.post<Vinculador>('http://localhost:5234/api/Vinculadores', this.vinculadorSeleccionado)
-        .subscribe((nuevo: Vinculador) => {
-          this.vinculadores.push(nuevo);
-          this.cerrarModal();
-        });
+      // crear
+      this.servicio.create(Vinculador).subscribe((nuevo: Vinculador) => {
+        this.originalData.push(nuevo);
+        this.actualizarData();
+      });
     }
   }
 
   eliminar(id: string): void {
-    if (!confirm('¿Estás seguro de eliminar este vinculador?')) return;
-    this.http.delete(`/api/Vinculadores/${id}`)
-      .subscribe(() => {
-        this.vinculadores = this.vinculadores.filter(v => v.id !== id);
-      });
+    if (!confirm('¿Estás seguro de eliminar este Vinculador?')) return;
+    this.servicio.delete(id).subscribe(() => {
+      this.originalData = this.originalData.filter(e => e.id !== id);
+      this.actualizarData();
+    });
   }
 }

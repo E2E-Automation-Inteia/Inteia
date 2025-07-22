@@ -1,1 +1,23 @@
-<app-list></app-list>
+<app-list
+  [TituloTabla]="'Objetivo Porcentaje'"
+
+  [filters]="filtros"
+  (filterChanged)="aplicarFiltros($event)"
+  (searchChanged)="buscar($event)"
+  (clearFiltersEvent)="reset()"
+  
+  [columnas]="columnas"
+  [data]="data"
+  (onEditar)="abrirModal($event)"
+  (onEliminar)="eliminar($event)"
+
+  [totalItems]="totalElementos"
+  [itemsPerPage]="elementosPorPagina"
+  [(currentPage)]="paginaActual"
+
+  [selectedItem]="ElementoSeleccionado"
+  (saveItem)="guardarDesdeModal($event)"
+  
+>
+  ></app-list
+>
