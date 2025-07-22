@@ -23,10 +23,6 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'home',
-    loadComponent: () => import('./pages/home/home.component')
-  },
-  {
     path: 'concepts',
     loadComponent: () => import('./concepts/concepts.component')
   },

@@ -12,7 +12,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-    CommonModule, // <- ✅ esto es lo que te falta
+    CommonModule, 
     MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
@@ -28,19 +28,14 @@ export class DashboardComponent {
   theme = false;
 
   ngOnInit(): void {
-    const savedTheme = localStorage.getItem('theme');
-    this.theme = savedTheme === 'dark';
-    this.applyTheme();
+
   }
   
   toggleDarkMode(): void {
-    this.theme = !this.theme;
-    localStorage.setItem('theme', this.theme ? 'dark' : 'light');
-    this.applyTheme();
+
   }
   
   applyTheme(): void {
-    document.body.classList.toggle('dark', this.theme);
   }
   
 }

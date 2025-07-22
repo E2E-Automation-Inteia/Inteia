@@ -6,7 +6,6 @@ import { Router, RouterModule } from '@angular/router';
 import { LoadingService } from '../../../../shared/services/loading.service';
 import { LoadingComponent } from "../../../../shared/components/loading/loading.component";
 import { CommonModule } from '@angular/common';
-import { SignalsService } from '../../../../shared/services/signals.service';
 import { ThemaService } from '../../../../shared/services/thema.service';
 
 @Component({
@@ -51,7 +50,6 @@ export default class LoginComponent {
     if (this.loginForm?.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          localStorage.setItem('token', (res.token))
           this.loading.toggleLoading()
           this.router.navigate(['/dashboard'])
         },
@@ -69,7 +67,6 @@ export default class LoginComponent {
       this.authService.register(this.registerForm.value).subscribe({
         next: (res: any) => {
           console.log('usuario creado exitosamente', res);
-          localStorage.setItem('token', res.token)
           this.loading.toggleLoading()
           this.router.navigate(['/dashboard'])
         },
@@ -86,13 +83,8 @@ export default class LoginComponent {
 
   toggleDarkMode() {
     this.themaService.toggle();
-    if (this.themaService.state) {
-      this.isDarkMode = 'Dark Mode';
-      this.theme = this.themaService.state
-    } else {
-      this.isDarkMode = 'Light Mode';
-      this.theme = this.themaService.state
-    }
+    this.theme = this.themaService.state;
+    this.isDarkMode = this.theme ? 'Dark Mode' : 'Light Mode';
   }
 
 }

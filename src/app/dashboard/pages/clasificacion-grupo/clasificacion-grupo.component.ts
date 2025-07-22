@@ -5,11 +5,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { ClasificacionGrupoService } from './services/clasificacion-grupo.service';
 import { ClasificacionGrupo } from '../../../interfaces/ClasificacionGrupo';
+import { ListComponent } from "../../../shared/components/list/list.component";
 
 @Component({
   selector: 'app-clasificacion-grupo',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatTableModule, MatButtonModule],
+  imports: [CommonModule, FormsModule, MatTableModule, MatButtonModule, ListComponent],
   templateUrl: './clasificacion-grupo.component.html',
   styleUrls: ['./clasificacion-grupo.component.css']
 })

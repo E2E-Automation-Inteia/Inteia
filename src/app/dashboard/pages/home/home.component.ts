@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ListComponent } from "../../../shared/components/list/list.component";
 
 interface Oportunidad {
   id: string;
@@ -17,7 +18,7 @@ interface Oportunidad {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ListComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })

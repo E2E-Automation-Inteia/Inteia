@@ -1,17 +1,25 @@
-<mat-sidenav-container class="h-screen font-exo" >
-    <mat-sidenav mode="side" opened class="w-64 bg-indigo-700 text-white">
+<div class="flex flex-col h-screen font-exo text-white">
+
+  <!-- Header -->
+  <header class="px-6  bg-blue shadow-md flex justify-between items-center h-24">
+    <img src="assets/logoE2E.png" alt="E2E" class="h-16">
+
+    <div>
+      <button  class="hover:text-cyan-400 transition">🌙</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gradient-to-b p-4 shadow-lg border-r border-white/10 bg-[rgba(15,23,42,0.89)]">
       <app-sidebar></app-sidebar>
-    </mat-sidenav>
-  
-    <mat-sidenav-content
-    [ngClass]="theme ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'"
-    class="transition-all duration-300"
-  >
-        <app-toolbar (toggleTheme)="toggleDarkMode()"></app-toolbar>
-  
-      <div class="p-6 min-h-screen">
-        <router-outlet></router-outlet>
-      </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-  
+    </aside>
+
+    <!-- Page Content -->
+    <main class="p-6 overflow-y-auto flex-1 bg-blue">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

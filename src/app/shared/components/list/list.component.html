@@ -1,0 +1,131 @@
+<div class="p-6 rounded-xl shadow-2xl text-sm text-white bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
+
+  <div class="mb-6">
+    <h1 class="text-xl font-bold text-slate-200 mb-4">{{TituloTabla}}</h1>
+
+    <!-- filtros y buscador -->
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4 w-full md:w-auto">
+        <div class="relative w-full max-w-xs">
+          <input type="text" [(ngModel)]="searchTerm" (input)="onSearchChange()" placeholder="Buscar usuario..."
+            class="w-full bg-slate-800/80 border border-slate-700 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20"
+              fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+
+        <ng-container *ngFor="let filter of filters">
+          <ng-container [ngSwitch]="filter.type">
+            <!-- filtros -->
+            <select *ngSwitchCase="'select'" [(ngModel)]="filter.value" (change)="onFilterChange()"
+              class="bg-slate-800/80 border border-slate-700 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition">
+              <option [value]="filter.key" selected>{{ filter.key }}</option>
+              <option *ngFor="let option of filter.options" [value]="option">
+                {{ option | trucate:10 }}
+              </option>
+            </select>
+          </ng-container>
+        </ng-container>
+      </div>
+      <button
+        class="w-full md:w-auto bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 py-2 rounded-lg transition shadow-md flex items-center justify-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+            clip-rule="evenodd" />
+        </svg>
+        Crear Usuario
+      </button>
+    </div>
+  </div>
+  <!-- fin filtros y buscador -->
+
+  <!-- tablas dinamicas -->
+  <div class="overflow-x-auto rounded-lg border border-slate-800">
+    <table class="min-w-full text-left divide-y divide-slate-800">
+      <thead class="bg-[#0f172a]/80 text-cyan-300 text-xs uppercase">
+        <tr>
+          <th *ngFor="let col of columnas" class="px-6 py-4">{{ col }}</th>
+          <th class="px-6 py-4 text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="bg-[#1e293b]/70 divide-y divide-slate-800">
+        <tr *ngFor="let item of data" class="hover:bg-[#334155]/50 transition">
+          <td *ngFor="let col of columnas" class="px-6 py-4 whitespace-nowrap">
+            <ng-container [ngSwitch]="col.toLowerCase()">
+              <span *ngSwitchCase="'estado'">
+                <span [ngClass]="{
+                  'bg-cyan-500/20 text-cyan-300': item[col] === 'Activo',
+                  'bg-yellow-500/20 text-yellow-300': item[col] === 'Pendiente',
+                  'bg-red-500/20 text-red-400': item[col] === 'Inactivo'
+                }" class="text-xs font-semibold px-2.5 py-1 rounded-full">
+                  {{ item[col] }}
+                </span>
+              </span>
+              <span *ngSwitchDefault>
+                {{ item[col] }}
+              </span>
+            </ng-container>
+          </td>
+          <td class="px-6 py-4 text-center space-x-2">
+            <button
+              class="bg-sky-500/80 hover:bg-sky-600 text-white px-3 py-1 rounded-md text-xs font-semibold">Editar</button>
+            <button
+              class="bg-slate-600/80 hover:bg-slate-700 text-white px-3 py-1 rounded-md text-xs font-semibold">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- fin tablas dinamicas -->
+
+  <div class="flex items-center justify-between mt-6 text-xs">
+    <span class="text-slate-400">Mostrando 1 a 3 de 25 usuarios</span>
+    <div class="inline-flex items-center gap-1">
+      <button class="px-3 py-1 bg-slate-800/80 rounded-md hover:bg-slate-700 transition">Anterior</button>
+      <button class="px-3 py-1 bg-slate-700 rounded-md hover:bg-slate-600 transition">1</button>
+      <button class="px-3 py-1 bg-cyan-600 text-white rounded-md">2</button>
+      <button class="px-3 py-1 bg-slate-700 rounded-md hover:bg-slate-600 transition">3</button>
+      <span class="text-slate-500">...</span>
+      <button class="px-3 py-1 bg-slate-700 rounded-md hover:bg-slate-600 transition">9</button>
+      <button class="px-3 py-1 bg-slate-800/80 rounded-md hover:bg-slate-700 transition">Siguiente</button>
+    </div>
+  </div>
+
+  <dialog #dialogRef
+    class="rounded-xl shadow-2xl w-full max-w-lg p-0 bg-gradient-to-br from-[#0f172a] to-[#1e293b] border border-slate-700 text-slate-300 backdrop:bg-black/60">
+
+    <div class="p-6">
+      <h2 class="text-xl font-bold mb-6 text-cyan-400 drop-shadow-[0_0_6px_#06b6d4]">
+        {{ selected.id ? 'Editar Vinculador' : 'Nuevo Vinculador' }}
+      </h2>
+
+      <form (ngSubmit)="save(selected.id)" class="space-y-5" method="dialog">
+
+        <label class="block text-sm font-medium text-slate-400">
+          {{value[selected.nombre] ? 'Editar Nombre' : 'Nombre'}}
+          <input [(ngModel)]="value[selected.nombre]" name="nombre"
+            class="mt-2 block w-full bg-slate-800/80 border border-slate-700 rounded-lg py-2 px-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+            required />
+        </label>
+
+        <div class="flex justify-end space-x-4 pt-6">
+          <button type="button" (click)="cerrarModal()"
+            class="px-5 py-2 rounded-lg bg-slate-600/80 hover:bg-slate-700 text-white font-semibold transition shadow-md">
+            Cancelar
+          </button>
+          <button type="submit"
+            class="px-5 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-bold transition shadow-lg">
+            Guardar Cambios
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </dialog>
+</div>

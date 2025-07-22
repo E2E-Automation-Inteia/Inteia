@@ -4,15 +4,7 @@
 @tailwind utilities;
 @plugin "daisyui";
 
-html,
-body {
-    height: 100%;
-}
 
-body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-}
 
 body.dark {
     --mat-primary: #9c27b0;

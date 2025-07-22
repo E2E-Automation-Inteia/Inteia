@@ -14,11 +14,13 @@ export class AuthService {
 
   private readonly http = inject(HttpClient)
 
-  login(form:{email: string, password: string}): Observable<any> {
-    return this.http.post(URL_LOGIN, form)
+  login(form: { email: string, password: string }): Observable<any> {
+    return this.http.post(URL_LOGIN, form, {
+      withCredentials: true
+    });
   }
 
-  register(data:UserRequest){
+  register(data: UserRequest) {
     return this.http.post(URL_REGISTER, data)
   }
 }

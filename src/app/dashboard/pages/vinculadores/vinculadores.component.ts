@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ListComponent } from '../../../shared/components/list/list.component';
+
 
 interface Vinculador {
   id: string;
@@ -13,7 +15,7 @@ interface Vinculador {
 @Component({
   selector: 'app-vinculadores',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ListComponent],
   templateUrl: './vinculadores.component.html',
   styleUrls: ['./vinculadores.component.css']
 })
