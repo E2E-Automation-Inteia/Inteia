@@ -84,6 +84,10 @@ export class ListComponent {
     this.onsave.emit(item);
   }
 
+  isSpecialCase(col: string): boolean {
+  return ['isactive', 'espostulable'].includes(col);
+}
+
   // metodo para el paginador
   get totalPages(): number {
     return Math.ceil(this.totalItems / this.itemsPerPage);

@@ -12,7 +12,7 @@ import { AgremiacionesService } from './servicio/agremiaciones.service';
   styleUrl: './agremiaciones.component.css'
 })
 export class AgremiacionesComponent {
- ElementoSeleccionado: Agremiaciones = this.inicializar();
+  ElementoSeleccionado: Agremiaciones = this.inicializar();
 
   expandedRow: number | null = null;
   filtros: dinamycFilters[] = []
@@ -38,10 +38,10 @@ export class AgremiacionesComponent {
 
   inicializar(): Agremiaciones {
     return {
-  vinculadorId: '',
-  sigla: '',
-  razonSocial: ''
-};
+      vinculadorId: '',
+      sigla: '',
+      razonSocial: ''
+    };
   }
 
   obtenerElementos(): void {

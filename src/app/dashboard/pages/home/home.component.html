@@ -1,0 +1,170 @@
+<div class="min-h-screen bg-[#0f172a] text-white p-6 font-exo">
+  <!-- Encabezado -->
+  <header class="mb-10">
+    <h1 class="text-4xl font-bold text-cyan-400 drop-shadow-md">
+      Buscador de Oportunidades CTI
+    </h1>
+    <p class="text-slate-300 mt-2">Encuentra oportunidades disponibles en múltiples plataformas</p>
+  </header>
+
+  <!-- Filtros -->
+  <div class="bg-[#1e293b] p-6 rounded-lg shadow-md mb-10">
+    <h2 class="text-xl font-semibold mb-4 text-cyan-300">Filtros de búsqueda</h2>
+
+    <div class="grid md:grid-cols-3 gap-4">
+      <!-- Fecha inicio -->
+      <div>
+        <label class="block text-sm text-cyan-200 mb-1">Fecha de publicación - inicio</label>
+        <input type="date" [(ngModel)]="fechaInicio"
+          class="w-full p-2 rounded-lg bg-[#0f172a] text-white border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+      </div>
+
+      <!-- Fecha fin -->
+      <div>
+        <label class="block text-sm text-cyan-200 mb-1">Fecha de publicación - fin</label>
+        <input type="date" [(ngModel)]="fechaLimite"
+          class="w-full p-2 rounded-lg bg-[#0f172a] text-white border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+      </div>
+
+      <!-- Cantidad de oportunidades -->
+      <div>
+        <label class="block text-sm text-cyan-200 mb-1">Cantidad de oportunidades</label>
+        <input type="number" min="1" [(ngModel)]="cantidad"
+          class="w-full p-2 rounded-lg bg-[#0f172a] text-white border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Ej. 10" />
+      </div>
+    </div>
+
+    <!-- Lista de enlaces -->
+    <div class="mt-6">
+      <label class="block text-sm text-cyan-200 mb-2">Enlaces relacionados</label>
+
+      <!-- Lista visual de enlaces -->
+      <ul class="space-y-2 mb-4">
+        <li *ngFor="let enlace of enlaces; let i = index"
+          class="flex justify-between items-center bg-[#0f172a] p-2 rounded-lg border border-slate-700 text-white">
+          <span class="truncate max-w-[85%]">{{ enlace }}</span>
+          <button (click)="eliminarEnlace(i)" class="text-red-400 hover:text-red-500 transition-colors"
+            title="Eliminar enlace">
+            <i class="material-icons text-base">delete</i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- Campo para agregar nuevo enlace -->
+      <div class="flex gap-2">
+        <input type="url" [(ngModel)]="nuevoEnlace"
+          class="flex-1 p-2 rounded-lg bg-[#0f172a] text-white border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Agregar nuevo enlace (https://...)" />
+        <button (click)="agregarEnlace()"
+          class="bg-cyan-600 px-4 py-2 rounded-lg text-white hover:bg-cyan-700 transition-all shadow-lg">
+          <i class="material-icons align-middle text-sm">add_link</i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Botón de buscar -->
+    <button (click)="buscarOportunidades()"
+      class="mt-6 px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-all shadow-lg">
+      <i class="material-icons align-middle">search</i> Buscar
+    </button>
+  </div>
+
+
+  <section *ngIf="resultados.length > 0" class="mb-10">
+    <h2 class="text-xl font-semibold mb-4 text-cyan-300">Oportunidades encontradas</h2>
+
+    <div class="flex flex-col gap-4 max-h-[600px] overflow-y-auto pr-2 scroll-smooth">
+      <div *ngFor="let r of resultados"
+        class="bg-[#1e293b] rounded-xl p-4 shadow-md border border-slate-700 w-full min-w-0">
+        <h3 class="text-cyan-400 font-semibold text-lg mb-2">Código: {{ r.codigo || 'Sin código' }}</h3>
+        <p class="text-white mb-2">{{ r.descripcion }}</p>
+
+        <div class="text-sm mb-2 flex items-center gap-1">
+          <i class="material-icons text-base" [ngClass]="r.esPostulable ? 'text-green-400' : 'text-red-400'">
+            {{ r.esPostulable ? 'check_circle' : 'cancel' }}
+          </i>
+          <span [ngClass]="r.esPostulable ? 'text-green-400' : 'text-red-400'">
+            {{ r.esPostulable ? 'Postulable' : 'No postulable' }}
+          </span>
+        </div>
+
+
+        <div *ngIf="r.motivoPostulable" class="text-green-300 text-sm italic mb-1">
+          {{ r.motivoPostulable }}
+        </div>
+        <div *ngIf="r.motivoNoPostulable" class="text-red-300 text-sm italic mb-1">
+          {{ r.motivoNoPostulable }}
+        </div>
+
+        <div class="text-slate-400 text-xs mt-2">Fuente: {{ r.fuente }}</div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Cargando -->
+  <div *ngIf="cargando" class="text-cyan-400">Consultando oportunidades...</div>
+
+
+
+
+
+  <!-- Tarjetas -->
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div (click)="abrirDialog('investigacion')"
+      class="bg-gradient-to-r from-cyan-700 to-blue-800 p-4 rounded-xl text-center shadow-lg">
+      <i class="material-icons text-4xl mb-2">science</i>
+      <h3 class="text-lg font-bold">Investigación</h3>
+      <p class="text-sm text-slate-200">Proyectos para instituciones y universidades.</p>
+    </div>
+    <div (click)="abrirDialog('agremiaciones')"
+      class="bg-gradient-to-r from-purple-700 to-indigo-800 p-4 rounded-xl text-center shadow-lg">
+      <i class="material-icons text-4xl mb-2">groups</i>
+      <h3 class="text-lg font-bold">Agremiaciones</h3>
+      <p class="text-sm text-slate-200">Asociaciones y redes de conocimiento.</p>
+    </div>
+    <div (click)="abrirDialog('internacional')"
+      class="bg-gradient-to-r from-green-700 to-emerald-800 p-4 rounded-xl text-center shadow-lg">
+      <i class="material-icons text-4xl mb-2">public</i>
+      <h3 class="text-lg font-bold">Internacional</h3>
+      <p class="text-sm text-slate-200">Convocatorias globales y alianzas estratégicas.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- INVESTIGACIÓN -->
+<dialog #dialogInvestigacion class="rounded-lg w-[90%] max-w-xl bg-[#1e293b] text-white p-6">
+  <h2 class="text-xl text-cyan-400 font-bold mb-2">Proyección: Investigación</h2>
+  <p class="text-slate-300 text-sm mb-4">
+    Proyección IA: se espera un crecimiento del 18% en oportunidades hasta 2026.
+  </p>
+  <canvas #canvasInvestigacion class="w-full mb-4"></canvas>
+  <button (click)="cerrarDialog(dialogInvestigacion)"
+    class="bg-cyan-600 px-4 py-2 rounded hover:bg-cyan-700">Cerrar</button>
+</dialog>
+
+<!-- AGREMIACIONES -->
+<dialog #dialogAgremiaciones class="rounded-lg w-[90%] max-w-xl bg-[#1e293b] text-white p-6">
+  <h2 class="text-xl text-purple-400 font-bold mb-2">Proyección: Agremiaciones</h2>
+  <p class="text-slate-300 text-sm mb-4">
+    Proyección IA: aumento del 12% en convocatorias de redes colaborativas.
+  </p>
+  <canvas #canvasAgremiaciones class="w-full mb-4"></canvas>
+  <button (click)="cerrarDialog(dialogAgremiaciones)"
+    class="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700">Cerrar</button>
+</dialog>
+
+<!-- INTERNACIONAL -->
+<dialog #dialogInternacional class="rounded-lg w-[90%] max-w-xl bg-[#1e293b] text-white p-6">
+  <h2 class="text-xl text-green-400 font-bold mb-2">Proyección: Internacional</h2>
+  <p class="text-slate-300 text-sm mb-4">
+    Proyección IA: crecimiento estimado del 25% en participación global.
+  </p>
+  <canvas #canvasInternacional class="w-full mb-4"></canvas>
+  <button (click)="cerrarDialog(dialogInternacional)"
+    class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Cerrar</button>
+</dialog>

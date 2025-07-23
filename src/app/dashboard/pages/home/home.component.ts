@@ -1,89 +1,144 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ListComponent } from "../../../shared/components/list/list.component";
-
-interface Oportunidad {
-  id: string;
-  esPostulable: boolean;
-  idProceso: string;
-  descripcion: string;
-  fechaMaximaPostulacion: string;
-  departamento: string;
-  aspectosImportantes: string[];
-  urlConvocatoria: string;
-}
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Chart } from 'chart.js/auto';
+import { GeminiService } from '../../../shared/services/gemini.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, ListComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
-  oportunidades: Oportunidad[] = [];
-  expandedRow: number | null = null;
-  oportunidadSeleccionada: Oportunidad = this.inicializarOportunidad();
+export class HomeComponent implements AfterViewInit {
 
-  @ViewChild('dialogRef') dialogRef!: ElementRef<HTMLDialogElement>;
+  constructor(private readonly geminiService: GeminiService){}
 
-  constructor(private http: HttpClient) {}
+  @ViewChild('dialogInvestigacion') dialogInvestigacion!: ElementRef<HTMLDialogElement>;
+  @ViewChild('dialogAgremiaciones') dialogAgremiaciones!: ElementRef<HTMLDialogElement>;
+  @ViewChild('dialogInternacional') dialogInternacional!: ElementRef<HTMLDialogElement>;
 
-  ngOnInit(): void {
-    this.fetchOportunidades();
+  @ViewChild('canvasInvestigacion') canvasInvestigacion!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvasAgremiaciones') canvasAgremiaciones!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvasInternacional') canvasInternacional!: ElementRef<HTMLCanvasElement>;
+
+  nuevoEnlace: string = '';
+  enlaces: string[] = [];
+
+  fechaInicio: string = '';
+  fechaLimite: string = '';
+  cantidad: number = 5;
+
+  resultados: any[] = [];
+  cargando: boolean = false;
+
+  abrirDialog(tipo: string): void {
+    switch (tipo) {
+      case 'investigacion':
+        this.dialogInvestigacion.nativeElement.showModal();
+        break;
+      case 'agremiaciones':
+        this.dialogAgremiaciones.nativeElement.showModal();
+        break;
+      case 'internacional':
+        this.dialogInternacional.nativeElement.showModal();
+        break;
+    }
   }
 
-  fetchOportunidades(): void {
-    this.http.get<Oportunidad[]>('http://localhost:5234/api/oportunidades')
-      .subscribe(data => this.oportunidades = data);
+
+  agregarEnlace() {
+    if (this.nuevoEnlace.trim()) {
+      this.enlaces.push(this.nuevoEnlace.trim());
+      this.nuevoEnlace = '';
+    }
   }
 
-  abrirModal(oportunidad: Oportunidad): void {
-    this.oportunidadSeleccionada = { ...oportunidad }; // Copia para no mutar
-    this.dialogRef.nativeElement.showModal();
+  eliminarEnlace(index: number) {
+    this.enlaces.splice(index, 1);
   }
 
-  cerrarModal(): void {
-    this.dialogRef.nativeElement.close();
+  cerrarDialog(dialog: HTMLDialogElement): void {
+    dialog.close();
   }
 
-  guardarCambios(): void {
-    const id = this.oportunidadSeleccionada.id;
-    this.http.put(`http://localhost:5234/api/oportunidades/${id}`, this.oportunidadSeleccionada)
-      .subscribe({
-        next: () => {
-          const idx = this.oportunidades.findIndex(o => o.id === id);
-          if (idx !== -1) this.oportunidades[idx] = { ...this.oportunidadSeleccionada };
-          this.cerrarModal();
-        },
-        error: err => console.error('Error al guardar', err)
-      });
+  ngAfterViewInit(): void {
+    this.initCharts();
   }
 
-  inicializarOportunidad(): Oportunidad {
-    return {
-      id: '',
-      esPostulable: true,
-      idProceso: '',
-      descripcion: '',
-      fechaMaximaPostulacion: '',
-      departamento: '',
-      aspectosImportantes: [],
-      urlConvocatoria: ''
-    };
+  initCharts(): void {
+    new Chart(this.canvasInvestigacion.nativeElement, {
+      type: 'line',
+      data: {
+        labels: ['2022', '2023', '2024', '2025', '2026'],
+        datasets: [{
+          label: 'Investigación',
+          data: [100, 115, 130, 145, 160],
+          borderColor: 'cyan',
+          backgroundColor: 'rgba(0, 255, 255, 0.2)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: { responsive: true }
+    });
+
+    new Chart(this.canvasAgremiaciones.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: ['2022', '2023', '2024', '2025'],
+        datasets: [{
+          label: 'Agremiaciones',
+          data: [80, 85, 95, 105],
+          backgroundColor: 'purple'
+        }]
+      },
+      options: { responsive: true }
+    });
+
+    new Chart(this.canvasInternacional.nativeElement, {
+      type: 'line',
+      data: {
+        labels: ['2022', '2023', '2024', '2025', '2026'],
+        datasets: [{
+          label: 'Internacional',
+          data: [50, 60, 70, 85, 100],
+          borderColor: 'lime',
+          backgroundColor: 'rgba(0,255,128,0.3)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: { responsive: true }
+    });
   }
 
-  toggleExpand(index: number): void {
-    this.expandedRow = this.expandedRow === index ? null : index;
+  async buscarOportunidades() {
+  if (!this.fechaInicio || !this.fechaLimite ||  !this.enlaces.length) {
+    alert("Completa todos los campos y al menos un enlace.");
+    return;
   }
 
-  togglePostulable(index: number): void {
-    const o = this.oportunidades[index];
-    o.esPostulable = !o.esPostulable;
-    this.http.put(`http://localhost:5234/api/oportunidades/${o.id}`, o)
-      .subscribe();
+  this.cargando = true;
+  this.resultados = [];
+
+  try {
+    const res = await this.geminiService.obtenerOportunidadesDemo(
+      this.enlaces,
+      this.cantidad,
+      this.fechaInicio,
+      this.fechaLimite,
+    );
+
+    this.resultados = res;
+    console.log('✅ Resultados:', res);
+  } catch (err) {
+    console.error("❌ Error al buscar oportunidades:", err);
+  } finally {
+    this.cargando = false;
   }
 }
-  
+
+
+}

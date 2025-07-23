@@ -65,21 +65,21 @@
         <tr *ngFor="let item of data.slice(fromItem - 1, toItem)" class="hover:bg-[#334155]/50 transition">
           <td *ngFor="let col of columnas" class="px-6 py-4 whitespace-nowrap">
             <ng-container [ngSwitch]="col.toLowerCase()">
-              <span *ngSwitchCase="'estado'">
+              <span *ngSwitchCase="'isactive'">
                 <span [ngClass]="{
-                  'bg-cyan-500/20 text-cyan-300': item[col] === 'Activo',
-                  'bg-yellow-500/20 text-yellow-300': item[col] === 'Pendiente',
-                  'bg-red-500/20 text-red-400': item[col] === 'Inactivo'
-                }" class="text-xs font-semibold px-2.5 py-1 rounded-full">
-                  {{ item[col] }}
+                    'bg-cyan-500/20 text-cyan-300': item[col] === true,
+                    'bg-red-500/20 text-red-400': item[col] === false
+                    }" class="text-xs font-semibold px-2.5 py-1 rounded-full">
+                  {{ item[col] === true ? 'Active' : 'Inactive' }}
                 </span>
+
               </span>
               <span *ngSwitchDefault>
                 {{ item[col] }}
               </span>
             </ng-container>
           </td>
-          <td class="flex px-6 py-4 text-center space-x-2">
+          <td class="flex justify-center px-6 py-4 text-center space-x-2">
             <button (click)="editar(item)"
               class="bg-sky-500/80 hover:bg-sky-600 text-white px-3 py-1 rounded-md text-xs font-semibold">Editar</button>
             <button (click)="eliminar(item)"
