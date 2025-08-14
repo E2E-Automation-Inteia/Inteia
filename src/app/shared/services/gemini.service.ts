@@ -5,11 +5,11 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
   providedIn: 'root',
 })
 export class GeminiService {
-  private readonly API_KEY = 'AIzaSyBWM3em9-5TDJOrUZRmf-bkOWJ4wuQsdbY';
+  private readonly API_KEY = 'AIzaSyDOZLT6UNU6hZBszi4NDS_RW2mDTGMrs-0';
   private readonly genAI = new GoogleGenerativeAI(this.API_KEY);
-  private readonly model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-pro' }); 
+  private readonly model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
 
-  constructor() {}
+  constructor() { }
 
   private construirPromptDemo(
     enlace: string,
@@ -18,7 +18,7 @@ export class GeminiService {
     fechaLimite: string
   ): string {
     return `
-Quiero que generes ${cantidad} oportunidades ficticias para una demo. 
+Quiero que busques ${cantidad} oportunidades. 
 Cada una debe seguir esta estructura en JSON:
 
 [
@@ -58,7 +58,6 @@ Solo responde con el array JSON.`;
         const response = await result.response;
         let jsonOnly = response.text();
 
-        // Limpiar si viene con marcas de código tipo Markdown
         jsonOnly = jsonOnly.replace(/```json|```/g, '').trim();
 
         let dataParsed = [];
