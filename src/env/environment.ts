@@ -1,5 +1,5 @@
 export const environment = {
     production: false, 
-    apiUrlPrivate: 'http://localhost:5234/api',
-    apiUrlAuth: 'http://localhost:5234/api/Auth',
+    apiUrlPrivate: 'https://24eb27144a29.ngrok-free.app/api',
+    apiUrlAuth: 'https://24eb27144a29.ngrok-free.app/api/Auth',
 }
